@@ -1,359 +1,375 @@
-import { Text, View, StyleSheet, ScrollView, Alert } from "react-native";
-import React from "react";
-import Button from "@/components/Button";
-import { Card } from "@/components/Card";
+import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import React, { useState } from "react";
+import { Carousel, CarouselItem } from "../components/Carousel";
+import { Progress } from "../components/progress";
+import { Toast, ToastProvider, useToast, toast } from "../components/Toast";
+import { Tabs, TabItem } from "../components/Tabs";
 
-const Index = () => {
+const TestComponents = () => {
+  const { showToast } = useToast();
+  const [progress, setProgress] = useState(25);
+  const [toastVisible, setToastVisible] = useState(false);
 
-  const handleCardPress = (cardType: string) => {
-    Alert.alert("Card Pressed", `You pressed the ${cardType} card!`);
-  };
+  // Sample carousel data
+  const carouselData: CarouselItem[] = [
+    {
+      id: "1",
+      content: (
+        <View style={styles.carouselItem}>
+          <Text style={styles.carouselText}>Slide 1</Text>
+          <Text style={styles.carouselSubtext}>
+            Beautiful carousel component
+          </Text>
+        </View>
+      ),
+    },
+    {
+      id: "2",
+      content: (
+        <View style={[styles.carouselItem, { backgroundColor: "#e7f3ff" }]}>
+          <Text style={styles.carouselText}>Slide 2</Text>
+          <Text style={styles.carouselSubtext}>Auto-play and pagination</Text>
+        </View>
+      ),
+    },
+    {
+      id: "3",
+      content: (
+        <View style={[styles.carouselItem, { backgroundColor: "#f0f9ff" }]}>
+          <Text style={styles.carouselText}>Slide 3</Text>
+          <Text style={styles.carouselSubtext}>Swipe to navigate</Text>
+        </View>
+      ),
+    },
+  ];
 
-  const handleLikePress = () => {
-    Alert.alert("Liked!", "You liked this post");
-  };
+  // Sample tabs data
+  const tabsData: TabItem[] = [
+    {
+      id: "overview",
+      label: "Overview",
+      content: (
+        <View style={styles.tabContent}>
+          <Text style={styles.tabTitle}>Overview Content</Text>
+          <Text style={styles.tabDescription}>
+            This is the overview tab showcasing our component library.
+          </Text>
 
-  const handleSharePress = () => {
-    Alert.alert("Share", "Sharing this content...");
-  };
+          <View style={styles.progressSection}>
+            <Text style={styles.sectionTitle}>Progress Examples:</Text>
 
-  const handleBookmarkPress = () => {
-    Alert.alert("Bookmarked", "Added to your bookmarks");
-  };
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Linear Progress (25%)</Text>
+              <Progress value={25} showText />
+            </View>
 
-  const renderActionButtons = () => (
-    <View style={styles.actionButtons}>
-      <Button
-        title="Like"
-        onPress={handleLikePress}
-        style={styles.actionButton}
-        variant="outline"
-        size="sm"
-      />
-      <Button
-        title="Share"
-        onPress={handleSharePress}
-        style={styles.actionButton}
-        variant="outline"
-        size="sm"
-      />
-      <Button
-        title="Save"
-        onPress={handleBookmarkPress}
-        style={styles.actionButton}
-        variant="filled"
-        size="sm"
-      />
-    </View>
-  );
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Success Progress (75%)</Text>
+              <Progress value={75} color="#10b981" showText />
+            </View>
 
-  const renderProfileHeader = () => (
-    <View style={styles.profileHeader}>
-      <View style={styles.avatar} />
-      <View style={styles.profileInfo}>
-        <Text style={styles.profileName}>John Doe</Text>
-        <Text style={styles.profileHandle}>@johndoe</Text>
-      </View>
-      <Text style={styles.timestamp}>2h ago</Text>
-    </View>
-  );
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Large Progress (50%)</Text>
+              <Progress value={50} size="lg" color="#f59e0b" showText />
+            </View>
+          </View>
+        </View>
+      ),
+    },
+    {
+      id: "components",
+      label: "Components",
+      content: (
+        <View style={styles.tabContent}>
+          <Text style={styles.tabTitle}>Component Gallery</Text>
+          <Text style={styles.tabDescription}>
+            Test different toast notifications:
+          </Text>
+
+          <View style={styles.buttonGrid}>
+            <View style={styles.buttonRow}>
+              <View
+                style={[styles.button, styles.successButton]}
+                onTouchEnd={() =>
+                  showToast({
+                    message: "Success! Operation completed.",
+                    type: "success",
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>Success Toast</Text>
+              </View>
+
+              <View
+                style={[styles.button, styles.errorButton]}
+                onTouchEnd={() =>
+                  showToast({
+                    message: "Error! Something went wrong.",
+                    type: "error",
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>Error Toast</Text>
+              </View>
+            </View>
+
+            <View style={styles.buttonRow}>
+              <View
+                style={[styles.button, styles.warningButton]}
+                onTouchEnd={() =>
+                  showToast({
+                    message: "Warning! Please check this.",
+                    type: "warning",
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>Warning Toast</Text>
+              </View>
+
+              <View
+                style={[styles.button, styles.infoButton]}
+                onTouchEnd={() =>
+                  showToast({
+                    message: "Info: Here is some information.",
+                    type: "info",
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>Info Toast</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      ),
+    },
+    {
+      id: "progress",
+      label: "Progress",
+      content: (
+        <View style={styles.tabContent}>
+          <Text style={styles.tabTitle}>Progress Variants</Text>
+
+          <View style={styles.progressSection}>
+            <Text style={styles.sectionTitle}>Different Sizes:</Text>
+
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Small (sm)</Text>
+              <Progress value={30} size="sm" />
+            </View>
+
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Medium (md) - Default</Text>
+              <Progress value={60} size="md" />
+            </View>
+
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Large (lg)</Text>
+              <Progress value={80} size="lg" />
+            </View>
+
+            <View style={styles.progressItem}>
+              <Text style={styles.progressLabel}>Extra Large (xl)</Text>
+              <Progress value={45} size="xl" />
+            </View>
+          </View>
+
+          <View style={styles.progressSection}>
+            <Text style={styles.sectionTitle}>Circular Progress:</Text>
+            <View style={styles.circularContainer}>
+              <Progress value={75} variant="circular" showText />
+            </View>
+          </View>
+        </View>
+      ),
+    },
+  ];
 
   return (
-    <ScrollView style={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.pageTitle}>Card Component Examples</Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <View style={styles.header}>
+        <Text style={styles.title}>UI Component Library</Text>
+        <Text style={styles.subtitle}>
+          Testing Carousel, Progress, Toast & Tabs
+        </Text>
+      </View>
 
-        {/* Basic Card */}
-        <Card
-          title="Welcome to Native-Mate"
-          content="This is a basic card component with title and content. Perfect for displaying simple information."
-          style={styles.cardSpacing}
+      {/* Carousel Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Carousel Component</Text>
+        <Carousel
+          data={carouselData}
+          autoPlay
+          autoPlayInterval={4000}
+          showPagination
+          showArrows
+          itemHeight={150}
+          onSlideChange={(index) => console.log("Slide changed to:", index)}
         />
+      </View>
 
-        {/* Card with Image */}
-        <Card
-          variant="elevated"
-          title="Beautiful Landscape"
-          subtitle="Nature Photography"
-          content="Captured this amazing sunset during my hiking trip last weekend. The colors were absolutely breathtaking!"
-          image={{ uri: "https://picsum.photos/400/200?random=1" }}
-          imagePosition="top"
-          footer={renderActionButtons()}
-          style={styles.cardSpacing}
+      {/* Tabs Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Tabs Component</Text>
+        <Tabs
+          items={tabsData}
+          variant="underline"
+          size="md"
+          onTabChange={(tabId) => console.log("Tab changed to:", tabId)}
         />
+      </View>
 
-        {/* Social Media Style Card */}
-        <Card
-          variant="default"
-          header={renderProfileHeader()}
-          content="Just finished building my first React Native app with Native-Mate components! The development experience has been amazing. Highly recommend checking it out! 🚀 #ReactNative #MobileDev"
-          footer={renderActionButtons()}
-          style={styles.cardSpacing}
-        />
-
-        {/* Product Card */}
-        <Card
-          variant="outlined"
-          size="lg"
-          title="Premium Headphones"
-          subtitle="$199.99"
-          content="High-quality wireless headphones with noise cancellation and 30-hour battery life."
-          image={{ uri: "https://picsum.photos/400/200?random=2" }}
-          imagePosition="left"
-          footer={
-            <View style={styles.productActions}>
-              <Button
-                title="Add to Cart"
-                onPress={() => handleCardPress("product")}
-                style={{ flex: 1, marginRight: 8 }}
-              />
-              <Button
-                title="♡"
-                onPress={handleLikePress}
-                variant="outline"
-                style={{ width: 50 }}
-              />
-            </View>
-          }
-          style={styles.cardSpacing}
-        />
-
-        {/* Touchable Card */}
-        <Card
-          variant="filled"
-          title="Settings"
-          subtitle="Tap to open"
-          content="Configure your app preferences and account settings."
-          onPress={() => handleCardPress("settings")}
-          style={[styles.cardSpacing, styles.touchableCard]}
-        >
-          <View style={styles.settingsIcons}>
-            <Text style={styles.icon}>⚙️</Text>
-            <Text style={styles.icon}>🔔</Text>
-            <Text style={styles.icon}>🔒</Text>
-          </View>
-        </Card>
-
-        {/* Background Image Card */}
-        <Card
-          variant="elevated"
-          title="Adventure Awaits"
-          content="Discover new places and create unforgettable memories."
-          image={{ uri: "https://picsum.photos/400/300?random=3" }}
-          imagePosition="background"
-          titleStyle={{ color: "white", fontWeight: "bold" }}
-          contentStyle={{ color: "white" }}
-          style={[styles.cardSpacing, { height: 200 }]}
-          footer={
-            <Button
-              title="Explore Now"
-              onPress={() => handleCardPress("adventure")}
-              variant="filled"
-              style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
-            />
-          }
-        />
-
-        {/* Notification Card */}
-        <Card
-          variant="outlined"
-          size="sm"
-          title="🎉 Congratulations!"
-          content="You've successfully added your first card component!"
-          footer={
-            <Button
-              title="Dismiss"
-              onPress={() => handleCardPress("notification")}
-              variant="outline"
-              size="sm"
-            />
-          }
-          style={[
-            styles.cardSpacing,
-            { borderColor: "#10b981", borderWidth: 2 },
-          ]}
-        />
-
-        {/* Custom Content Card */}
-        <Card
-          variant="elevated"
-          header={
-            <View style={styles.customHeader}>
-              <Text style={styles.customHeaderTitle}>Custom Header</Text>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>NEW</Text>
-              </View>
-            </View>
-          }
-          style={styles.cardSpacing}
-        >
-          <View style={styles.customContent}>
-            <Text style={styles.customContentText}>
-              This card uses custom header and children content instead of the
-              built-in title/content props.
-            </Text>
-            <View style={styles.stats}>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>1.2k</Text>
-                <Text style={styles.statLabel}>Views</Text>
-              </View>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>85</Text>
-                <Text style={styles.statLabel}>Likes</Text>
-              </View>
-              <View style={styles.stat}>
-                <Text style={styles.statNumber}>12</Text>
-                <Text style={styles.statLabel}>Comments</Text>
-              </View>
-            </View>
-          </View>
-        </Card>
-
-        <View style={{ height: 50 }} />
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          🎉 All components are working perfectly!
+        </Text>
       </View>
     </ScrollView>
   );
 };
 
-export default Index;
+const index = () => {
+  return (
+    <ToastProvider>
+      <TestComponents />
+      <Toast visible={false} message="" onDismiss={() => {}} />
+    </ToastProvider>
+  );
+};
+
+export default index;
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f8fafc",
   },
-  pageTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#1f2937",
-  },
-  cardSpacing: {
-    marginBottom: 16,
-  },
-
-  // Action buttons styles
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 8,
-  },
-  actionButton: {
-    flex: 1,
-    marginHorizontal: 4,
-  },
-
-  // Profile header styles
-  profileHeader: {
-    flexDirection: "row",
+  header: {
+    padding: 20,
     alignItems: "center",
-    marginBottom: 12,
+    backgroundColor: "#ffffff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
   },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#e5e7eb",
-    marginRight: 12,
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#1e293b",
+    marginBottom: 4,
   },
-  profileInfo: {
-    flex: 1,
-  },
-  profileName: {
-    fontWeight: "600",
+  subtitle: {
     fontSize: 16,
-    color: "#111827",
+    color: "#64748b",
+    textAlign: "center",
   },
-  profileHandle: {
-    fontSize: 14,
-    color: "#6b7280",
+  section: {
+    margin: 16,
+    marginBottom: 24,
   },
-  timestamp: {
-    fontSize: 12,
-    color: "#9ca3af",
-  },
-
-  // Product card styles
-  productActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
-  },
-
-  // Touchable card styles - FIXED: Removed borderStyle: "dashed"
-  touchableCard: {
-    borderWidth: 2,
-    borderColor: "transparent",
-    // borderStyle: "dashed", // Removed - not supported in React Native TypeScript
-  },
-  settingsIcons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 12,
-  },
-  icon: {
-    fontSize: 24,
-  },
-
-  // Custom header styles
-  customHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#334155",
     marginBottom: 12,
   },
-  customHeaderTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#111827",
-  },
-  badge: {
-    backgroundColor: "#ef4444",
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+
+  // Carousel Styles
+  carouselItem: {
+    flex: 1,
+    backgroundColor: "#dbeafe",
     borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
-  badgeText: {
-    color: "white",
-    fontSize: 10,
+  carouselText: {
+    fontSize: 24,
     fontWeight: "bold",
+    color: "#1e40af",
+    marginBottom: 8,
+  },
+  carouselSubtext: {
+    fontSize: 16,
+    color: "#3730a3",
+    textAlign: "center",
   },
 
-  // Custom content styles
-  customContent: {
-    padding: 4,
+  // Tab Styles
+  tabContent: {
+    padding: 16,
   },
-  customContentText: {
-    fontSize: 14,
-    color: "#374151",
-    lineHeight: 20,
+  tabTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1e293b",
+    marginBottom: 8,
+  },
+  tabDescription: {
+    fontSize: 16,
+    color: "#64748b",
+    marginBottom: 20,
+    lineHeight: 24,
+  },
+
+  // Progress Styles
+  progressSection: {
+    marginBottom: 24,
+  },
+  progressItem: {
     marginBottom: 16,
   },
-  stats: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
+  progressLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#374151",
+    marginBottom: 8,
   },
-  stat: {
+  circularContainer: {
     alignItems: "center",
+    paddingVertical: 20,
   },
-  statNumber: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#111827",
+
+  // Button Styles
+  buttonGrid: {
+    gap: 12,
   },
-  statLabel: {
-    fontSize: 12,
-    color: "#6b7280",
-    marginTop: 2,
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+  },
+  successButton: {
+    backgroundColor: "#10b981",
+  },
+  errorButton: {
+    backgroundColor: "#ef4444",
+  },
+  warningButton: {
+    backgroundColor: "#f59e0b",
+  },
+  infoButton: {
+    backgroundColor: "#3b82f6",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  footer: {
+    padding: 20,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 18,
+    color: "#059669",
+    fontWeight: "500",
   },
 });
